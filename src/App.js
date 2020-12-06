@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import Func from './Func';
 
 const size = 70;
 
@@ -24,7 +25,7 @@ class App extends Component {
     }
   }
 
-  onTest = (pawn) => {
+  onDrawPawn = (pawn) => {
 
     this.setState({ pawnArrX: [], pawnArrY: [] });
     
@@ -100,12 +101,11 @@ class App extends Component {
     var pawnBtn = document.createElement('button');
     pawnBtn.setAttribute('class', 'ui button pawnBtn');
     pawnBtn.innerText = 'Add pawn';
-    pawnBtn.onclick = () => this.onTest(pawn);
+    pawnBtn.onclick = () => this.onDrawPawn(pawn);
     // pawnBtn.onclick = () => this.onDrawBoard(this.state.boardInput);
 
     pawnDiv.appendChild(pawnBtn);
   }
-
 
   onDrawBoard = (board, arrX, arrY) => {
 
@@ -138,7 +138,10 @@ class App extends Component {
 
     // pawn
     if (arrX !== undefined && arrY !== undefined) {
+      
+      document.getElementById('visualize').style.display = 'inline-block';
       for (var n = 0; n < this.state.pawnInput; n++) {
+
           if (arrX.length > 0 && arrY.length > 0) {
             ctx.fillRect(size * arrY[n], size * arrX[n], size, size);
           }
@@ -157,9 +160,136 @@ class App extends Component {
     ctx.stroke();
   }
 
-  render() {
+  onVisualClick = (arrX, arrY) => {
 
-    console.log(this.state);
+    var total = [];
+    var start = [];
+    var end = [];
+
+    start.push(arrX[0], arrY[0]); // 노드 2개라고 가정
+    end.push(arrX[1], arrY[1]);
+
+    for (var i = 0; i < arrX.length - 1; i++) {
+
+      if (arrX[i] < arrX[i+1] && arrY[i] < arrY[i+1]) { 
+        for (var n = arrX[i]; n <= arrX[i+1]; n++) {
+          for (var m = arrY[i]; m <= arrY[i+1]; m++) {
+            total.push([n, m]);
+          }
+        }
+      }
+      else if (arrX[i] < arrX[i+1] && arrY[i] > arrY[i+1]) { 
+        for (var n = arrX[i]; n <= arrX[i+1]; n++) {
+          for (var m = arrY[i+1]; m <= arrY[i]; m++) {
+            console.log(n + ' ' + m);
+          }
+        }
+      }
+      else if (arrX[i] > arrX[i+1] && arrY[i] < arrY[i+1]) { 
+        for (var n = arrX[i+1]; n <= arrX[i]; n++) {
+          for (var m = arrY[i]; m <= arrY[i+1]; m++) {
+            console.log(n + ' ' + m);
+          }
+        }
+      }
+      else if (arrX[i] > arrX[i+1] && arrY[i] > arrY[i+1]) { 
+        for (var n = arrX[i+1]; n <= arrX[i]; n++) {
+          for (var m = arrY[i+1]; m <= arrY[i]; m++) {
+            console.log(n + ' ' + m);
+          }
+        }
+      }
+
+    }
+
+    this.AstarAlgorithm(total, start, end);
+
+  }
+
+  AstarAlgorithm = (total, start, end) => {
+
+    var totalArr = total;
+    var current = [];
+    var open = [];
+    var close = [];
+
+    var minmin = 0;
+
+    var execute;
+
+    for (var i = 0; i < totalArr.length; i++) {
+      if (totalArr[i][0] === start[0] && totalArr[i][1] === start[1]) {
+        totalArr.splice(i, 1);
+      }
+    }
+
+    current = start;
+    close.push(start);
+
+    // loop start
+    while (current !== end) {
+
+      for (var a = -1; a <= 1; a++) {
+        for (var b = -1; b <= 1; b++) {
+
+          for (var c = 0; c < totalArr.length; c++) {
+            if (totalArr[c][0] === current[0]+a && totalArr[c][1] === current[1]+b) {
+              open.push([current[0]+a, current[1]+b]);
+              totalArr.splice(c, 1);
+            }
+          }
+          
+        }
+      }
+
+
+      for (var f = 0; f < open.length; f++) {
+        if (open[f][0] === end[0] && open[f][1] === end[1]) {
+          close.push(end);
+          current = end;
+          execute = false;
+        }
+        else execute = true;
+      }
+
+
+
+      if (execute) {
+        
+        current = [];
+
+          for (var d = 0; d < open.length; d++) { 
+            open[d].push(Math.abs(end[0] - open[d][0]) + Math.abs(end[1] - open[d][1]));
+
+            var min = [];
+            min.push(open[d][2]);
+
+            minmin = Math.min(...min);
+          }
+
+          for (var e = 0; e < open.length; e++) {
+            if (minmin === open[e][2]) {
+              if (current.length === 0) {
+                current.push(open[e][0], open[e][1]);
+                open = [];
+                close.push(current);
+              }
+            }
+          }
+
+          minmin = 0;
+      }
+
+    }
+    // loop end
+
+    console.log(totalArr);
+    console.log(current);
+    console.log(open);
+    console.log(close);
+  }
+
+  render() {
 
     var boardInput = this.state.boardInput;
     var pawnInput = this.state.pawnInput;
@@ -177,12 +307,14 @@ class App extends Component {
         <div id='pawnDiv'></div>
 
         <canvas id="board" />
+        <span><button id='visualize' className="ui button" onClick={() => this.onVisualClick(this.state.pawnArrX, this.state.pawnArrY)}>Find Path</button></span>
       </div>
     );
   }
 
 
 }
+
 
 export default App;
 

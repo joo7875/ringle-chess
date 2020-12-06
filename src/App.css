@@ -44,3 +44,7 @@ body {
 .pawnBtn {
     margin-left: 50px !important;
 }
+
+#visualize {
+    display: none;
+}
