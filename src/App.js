@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import Func from './Func';
 
 const size = 70;
 
@@ -181,21 +180,21 @@ class App extends Component {
       else if (arrX[i] < arrX[i+1] && arrY[i] > arrY[i+1]) { 
         for (var n = arrX[i]; n <= arrX[i+1]; n++) {
           for (var m = arrY[i+1]; m <= arrY[i]; m++) {
-            console.log(n + ' ' + m);
+            total.push([n, m]);
           }
         }
       }
       else if (arrX[i] > arrX[i+1] && arrY[i] < arrY[i+1]) { 
         for (var n = arrX[i+1]; n <= arrX[i]; n++) {
           for (var m = arrY[i]; m <= arrY[i+1]; m++) {
-            console.log(n + ' ' + m);
+            total.push([n, m]);
           }
         }
       }
       else if (arrX[i] > arrX[i+1] && arrY[i] > arrY[i+1]) { 
         for (var n = arrX[i+1]; n <= arrX[i]; n++) {
           for (var m = arrY[i+1]; m <= arrY[i]; m++) {
-            console.log(n + ' ' + m);
+            total.push([n, m]);
           }
         }
       }
