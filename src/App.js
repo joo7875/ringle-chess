@@ -153,6 +153,20 @@ class App extends Component {
     // draw result
     if (result !== undefined) {
       console.log(result);
+      console.log(arrX);
+      console.log(arrY);
+
+      for (var i = 0; i < result.length; i++) {
+        if (result[i][0] === arrX[0] && result[i][1] === arrY[0]) console.log(result[i]);
+        if (result[i][0] === arrX[1] && result[i][1] === arrY[1]) console.log(result[i]);
+        
+      }
+
+      result.forEach((item) => {
+          ctx.fillStyle = "#ff3300";
+          ctx.fillRect(size * item[1], size * item[0], size, size);
+      });
+
     }
 
     
@@ -167,6 +181,24 @@ class App extends Component {
     ctx.stroke();
   }
 
+  onShowResult = (result) => {
+    // show result
+    var resultDiv = document.getElementById('result');
+
+    // remove all results before rendering new results
+    while (resultDiv.childNodes.length > 1) {
+      resultDiv.removeChild(resultDiv.lastChild);
+    }
+
+    resultDiv.style.display = 'block';
+
+    result.forEach((item) => {
+      var data = document.createElement('div');
+      data.innerText = '[' + item[0] + ', ' + item[1] + ']';
+      resultDiv.appendChild(data);
+    });
+  }
+
   onVisualClick = (arrX, arrY) => {
 
     var total = [];
@@ -175,7 +207,6 @@ class App extends Component {
     result = [];
 
     start.push(arrX[0], arrY[0]); // 노드 2개라고 가정
-
     end.push(arrX[1], arrY[1]);
 
     for (var i = 0; i < arrX.length - 1; i++) {
@@ -213,31 +244,33 @@ class App extends Component {
       else if (arrX[i] === arrX[i+1] && arrY[i] !== arrY[i+1] && arrY[i] < arrY[i+1]) {
         for (var n = arrY[i]; n <= arrY[i+1]; n++) {
           result.push([arrX[i], n]);
-          this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
         }
       }
       else if (arrX[i] === arrX[i+1] && arrY[i] !== arrY[i+1] && arrY[i] > arrY[i+1]) {
         for (var n = arrY[i]; n >= arrY[i+1]; n--) {
           result.push([arrX[i], n]);
-          this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
         }
       }
       else if (arrX[i] !== arrX[i+1] && arrY[i] === arrY[i+1] && arrX[i] < arrX[i+1]) {
         for (var n = arrX[i]; n <= arrX[i+1]; n++) {
           result.push([n, arrY[i]]);
-          this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
         }
       }
       else if (arrX[i] !== arrX[i+1] && arrY[i] === arrY[i+1] && arrX[i] > arrX[i+1]) {
         for (var n = arrX[i]; n >= arrX[i+1]; n--) {
           result.push([n, arrY[i]]);
-          this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
         }
       }
 
     }
 
-    console.log(result);
+    if (result.length > 0) {
+      this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
+      this.onShowResult(result);
+    }
+
+    
+
     result = [];
 
     if (total.length > 0)
@@ -329,7 +362,8 @@ class App extends Component {
     console.log(close);
     result = close;
 
-    console.log(result);
+    this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
+    this.onShowResult(result);
   }
 
   render() {
@@ -338,19 +372,25 @@ class App extends Component {
     var pawnInput = this.state.pawnInput;
 
     return (
-      <div>
+      <div className='grid'>
         <div>
-          <span className='title'>Board Size</span>
-          <input type='number' className='input marginRight' onChange={this.onInputChange.bind(this, 'board')} />
-          <span className='title'>Number of pawn</span>
-          <input type='number' className='input marginRight' onChange={this.onInputChange.bind(this, 'pawn')} />
-          {/* <button className="ui button" onClick={() => this.onAddPawn(pawnInput)}>Enter</button> */}
+          <div>
+            <span className='title'>Board Size</span>
+            <input type='number' className='input marginRight' onChange={this.onInputChange.bind(this, 'board')} />
+            <span className='title'>Number of pawn</span>
+            <input type='number' className='input marginRight' onChange={this.onInputChange.bind(this, 'pawn')} />
+            {/* <button className="ui button" onClick={() => this.onAddPawn(pawnInput)}>Enter</button> */}
+          </div>
+
+          <div id='pawnDiv'></div>
+
+          <canvas id="board" />
+          <span><button id='visualize' className="ui button" onClick={() => this.onVisualClick(this.state.pawnArrX, this.state.pawnArrY)}>Find Path</button></span>
         </div>
 
-        <div id='pawnDiv'></div>
-
-        <canvas id="board" />
-        <span><button id='visualize' className="ui button" onClick={() => this.onVisualClick(this.state.pawnArrX, this.state.pawnArrY)}>Find Path</button></span>
+        <div id='result'>
+          <span className='title'>Result</span>
+        </div>
       </div>
     );
   }
