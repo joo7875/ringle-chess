@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 const size = 70;
+var result = [];
 
 class App extends Component {
 
@@ -106,7 +107,7 @@ class App extends Component {
     pawnDiv.appendChild(pawnBtn);
   }
 
-  onDrawBoard = (board, arrX, arrY) => {
+  onDrawBoard = (board, arrX, arrY, result) => {
 
     var canvas = document.getElementById("board");
     var ctx = canvas.getContext("2d");
@@ -135,19 +136,26 @@ class App extends Component {
       }
     }
 
-    // pawn
+    // draw pawn
     if (arrX !== undefined && arrY !== undefined) {
       
       document.getElementById('visualize').style.display = 'inline-block';
       for (var n = 0; n < this.state.pawnInput; n++) {
 
           if (arrX.length > 0 && arrY.length > 0) {
+            ctx.fillStyle = "#ffaa00";
             ctx.fillRect(size * arrY[n], size * arrX[n], size, size);
           }
         
       }
     }
 
+    // draw result
+    if (result !== undefined) {
+      console.log(result);
+    }
+
+    
     ctx.moveTo(0, size * board);
     ctx.lineTo(size * board, size * board);
 
@@ -164,8 +172,10 @@ class App extends Component {
     var total = [];
     var start = [];
     var end = [];
+    result = [];
 
     start.push(arrX[0], arrY[0]); // 노드 2개라고 가정
+
     end.push(arrX[1], arrY[1]);
 
     for (var i = 0; i < arrX.length - 1; i++) {
@@ -199,9 +209,39 @@ class App extends Component {
         }
       }
 
+
+      else if (arrX[i] === arrX[i+1] && arrY[i] !== arrY[i+1] && arrY[i] < arrY[i+1]) {
+        for (var n = arrY[i]; n <= arrY[i+1]; n++) {
+          result.push([arrX[i], n]);
+          this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
+        }
+      }
+      else if (arrX[i] === arrX[i+1] && arrY[i] !== arrY[i+1] && arrY[i] > arrY[i+1]) {
+        for (var n = arrY[i]; n >= arrY[i+1]; n--) {
+          result.push([arrX[i], n]);
+          this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
+        }
+      }
+      else if (arrX[i] !== arrX[i+1] && arrY[i] === arrY[i+1] && arrX[i] < arrX[i+1]) {
+        for (var n = arrX[i]; n <= arrX[i+1]; n++) {
+          result.push([n, arrY[i]]);
+          this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
+        }
+      }
+      else if (arrX[i] !== arrX[i+1] && arrY[i] === arrY[i+1] && arrX[i] > arrX[i+1]) {
+        for (var n = arrX[i]; n >= arrX[i+1]; n--) {
+          result.push([n, arrY[i]]);
+          this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
+        }
+      }
+
     }
 
-    this.AstarAlgorithm(total, start, end);
+    console.log(result);
+    result = [];
+
+    if (total.length > 0)
+      this.AstarAlgorithm(total, start, end);
 
   }
 
@@ -216,6 +256,7 @@ class App extends Component {
 
     var execute;
 
+    // total - start
     for (var i = 0; i < totalArr.length; i++) {
       if (totalArr[i][0] === start[0] && totalArr[i][1] === start[1]) {
         totalArr.splice(i, 1);
@@ -234,19 +275,20 @@ class App extends Component {
           for (var c = 0; c < totalArr.length; c++) {
             if (totalArr[c][0] === current[0]+a && totalArr[c][1] === current[1]+b) {
               open.push([current[0]+a, current[1]+b]);
-              totalArr.splice(c, 1);
+              totalArr.splice(c, 1); // total - open
             }
           }
           
         }
       }
 
-
+      // if open includes end, execute = false
       for (var f = 0; f < open.length; f++) {
         if (open[f][0] === end[0] && open[f][1] === end[1]) {
           close.push(end);
           current = end;
           execute = false;
+          break;
         }
         else execute = true;
       }
@@ -256,13 +298,12 @@ class App extends Component {
       if (execute) {
         
         current = [];
+        var min = [];
 
           for (var d = 0; d < open.length; d++) { 
             open[d].push(Math.abs(end[0] - open[d][0]) + Math.abs(end[1] - open[d][1]));
 
-            var min = [];
             min.push(open[d][2]);
-
             minmin = Math.min(...min);
           }
 
@@ -286,6 +327,9 @@ class App extends Component {
     console.log(current);
     console.log(open);
     console.log(close);
+    result = close;
+
+    console.log(result);
   }
 
   render() {
