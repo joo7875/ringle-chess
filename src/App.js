@@ -152,9 +152,8 @@ class App extends Component {
 
     // draw result
     if (result !== undefined) {
-      console.log(result);
-      console.log(arrX);
-      console.log(arrY);
+      
+      var j = 0;
 
       for (var i = 0; i < result.length; i++) {
         if (result[i][0] === arrX[0] && result[i][1] === arrY[0]) console.log(result[i]);
@@ -162,10 +161,15 @@ class App extends Component {
         
       }
 
-      result.forEach((item) => {
+      var handler = setInterval(function() {
           ctx.fillStyle = "#ff3300";
-          ctx.fillRect(size * item[1], size * item[0], size, size);
-      });
+          ctx.fillRect(size * result[j][1], size * result[j][0], size, size);
+          j++;
+
+          if (j >= result.length) {
+              clearInterval(handler);
+          }
+      }, 500);
 
     }
 
