@@ -152,22 +152,16 @@ class App extends Component {
 
     // draw result
     if (result !== undefined) {
-      
+
       var j = 0;
 
-      for (var i = 0; i < result.length; i++) {
-        if (result[i][0] === arrX[0] && result[i][1] === arrY[0]) console.log(result[i]);
-        if (result[i][0] === arrX[1] && result[i][1] === arrY[1]) console.log(result[i]);
-        
-      }
-
-      var handler = setInterval(function() {
+      var animation = setInterval(() => {
           ctx.fillStyle = "#ff3300";
           ctx.fillRect(size * result[j][1], size * result[j][0], size, size);
           j++;
 
           if (j >= result.length) {
-              clearInterval(handler);
+              clearInterval(animation);
           }
       }, 500);
 
@@ -213,60 +207,57 @@ class App extends Component {
     start.push(arrX[0], arrY[0]); // 노드 2개라고 가정
     end.push(arrX[1], arrY[1]);
 
-    for (var i = 0; i < arrX.length - 1; i++) {
 
-      if (arrX[i] < arrX[i+1] && arrY[i] < arrY[i+1]) { 
-        for (var n = arrX[i]; n <= arrX[i+1]; n++) {
-          for (var m = arrY[i]; m <= arrY[i+1]; m++) {
+      if (start[0] < end[0] && start[1] < end[1]) { 
+        for (var n = start[0]; n <= end[0]; n++) {
+          for (var m = start[1]; m <= end[1]; m++) {
             total.push([n, m]);
           }
         }
       }
-      else if (arrX[i] < arrX[i+1] && arrY[i] > arrY[i+1]) { 
-        for (var n = arrX[i]; n <= arrX[i+1]; n++) {
-          for (var m = arrY[i+1]; m <= arrY[i]; m++) {
+      else if (start[0] < end[0] && start[1] > end[1]) { 
+        for (var n = start[0]; n <= end[0]; n++) {
+          for (var m = end[1]; m <= start[1]; m++) {
             total.push([n, m]);
           }
         }
       }
-      else if (arrX[i] > arrX[i+1] && arrY[i] < arrY[i+1]) { 
-        for (var n = arrX[i+1]; n <= arrX[i]; n++) {
-          for (var m = arrY[i]; m <= arrY[i+1]; m++) {
+      else if (start[0] > end[0] && start[1] < end[1]) { 
+        for (var n = end[0]; n <= start[0]; n++) {
+          for (var m = start[1]; m <= end[1]; m++) {
             total.push([n, m]);
           }
         }
       }
-      else if (arrX[i] > arrX[i+1] && arrY[i] > arrY[i+1]) { 
-        for (var n = arrX[i+1]; n <= arrX[i]; n++) {
-          for (var m = arrY[i+1]; m <= arrY[i]; m++) {
+      else if (start[0] > end[0] && start[1] > end[1]) { 
+        for (var n = end[0]; n <= start[0]; n++) {
+          for (var m = end[1]; m <= start[1]; m++) {
             total.push([n, m]);
           }
         }
       }
 
 
-      else if (arrX[i] === arrX[i+1] && arrY[i] !== arrY[i+1] && arrY[i] < arrY[i+1]) {
-        for (var n = arrY[i]; n <= arrY[i+1]; n++) {
-          result.push([arrX[i], n]);
+      else if (start[0] === end[0] && start[1] !== end[1] && start[1] < end[1]) {
+        for (var n = start[1]; n <= end[1]; n++) {
+          result.push([start[0], n]);
         }
       }
-      else if (arrX[i] === arrX[i+1] && arrY[i] !== arrY[i+1] && arrY[i] > arrY[i+1]) {
-        for (var n = arrY[i]; n >= arrY[i+1]; n--) {
-          result.push([arrX[i], n]);
+      else if (start[0] === end[0] && start[1] !== end[1] && start[1] > end[1]) {
+        for (var n = start[1]; n >= end[1]; n--) {
+          result.push([start[0], n]);
         }
       }
-      else if (arrX[i] !== arrX[i+1] && arrY[i] === arrY[i+1] && arrX[i] < arrX[i+1]) {
-        for (var n = arrX[i]; n <= arrX[i+1]; n++) {
-          result.push([n, arrY[i]]);
+      else if (start[0] !== end[0] && start[1] === end[1] && start[0] < end[0]) {
+        for (var n = start[0]; n <= end[0]; n++) {
+          result.push([n, start[1]]);
         }
       }
-      else if (arrX[i] !== arrX[i+1] && arrY[i] === arrY[i+1] && arrX[i] > arrX[i+1]) {
-        for (var n = arrX[i]; n >= arrX[i+1]; n--) {
-          result.push([n, arrY[i]]);
+      else if (start[0] !== end[0] && start[1] === end[1] && start[0] > end[0]) {
+        for (var n = start[0]; n >= end[0]; n--) {
+          result.push([n, start[1]]);
         }
       }
-
-    }
 
     if (result.length > 0) {
       this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
