@@ -47,6 +47,7 @@ body {
 
 #visualize {
     display: none;
+    margin-bottom: 30px;
 }
 
 .grid {

@@ -22,6 +22,7 @@ class App extends Component {
     else if (type === 'pawn') {
       this.setState({ pawnInput: e.target.value, pawnArrX: [], pawnArrY: [] });
       this.onAddPawn(e.target.value);
+      this.onDrawBoard(this.state.boardInput);
     }
   }
 
@@ -190,6 +191,10 @@ class App extends Component {
 
     resultDiv.style.display = 'block';
 
+    var count = document.createElement('div');
+    count.innerText = result.length;
+    resultDiv.appendChild(count);
+
     result.forEach((item) => {
       var data = document.createElement('div');
       data.innerText = '[' + item[0] + ', ' + item[1] + ']';
@@ -204,9 +209,15 @@ class App extends Component {
     var end = [];
     result = [];
 
-    start.push(arrX[0], arrY[0]); // 노드 2개라고 가정
-    end.push(arrX[1], arrY[1]);
+    // start.push(arrX[0], arrY[0]); // 노드 2개라고 가정
+    // end.push(arrX[1], arrY[1]);
 
+
+    // loop start
+    for (var i = 0; i < arrX.length-1; i++) {
+
+      start.push(arrX[i], arrY[i]);
+      end.push(arrX[i+1], arrY[i+1]);
 
       if (start[0] < end[0] && start[1] < end[1]) { 
         for (var n = start[0]; n <= end[0]; n++) {
@@ -259,17 +270,22 @@ class App extends Component {
         }
       }
 
-    if (result.length > 0) {
-      this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
-      this.onShowResult(result);
+      if (total.length > 0)
+        this.AstarAlgorithm(total, start, end);
+
+      start = [];
+      end = [];
+      total = [];
+
     }
+    // loop end
 
-    
+      if (result.length > 0) {
+        this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
+        this.onShowResult(result);
+      }
 
-    result = [];
-
-    if (total.length > 0)
-      this.AstarAlgorithm(total, start, end);
+      result = [];    
 
   }
 
@@ -351,14 +367,18 @@ class App extends Component {
     }
     // loop end
 
-    console.log(totalArr);
-    console.log(current);
-    console.log(open);
+    // console.log(totalArr);
+    // console.log(current);
+    // console.log(open);
+
+    // close.pop(); // remove the last value of close array
     console.log(close);
-    result = close;
+    result.push(...close);
+    console.log(result);
 
     this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
     this.onShowResult(result);
+
   }
 
   render() {
@@ -380,7 +400,7 @@ class App extends Component {
           <div id='pawnDiv'></div>
 
           <canvas id="board" />
-          <span><button id='visualize' className="ui button" onClick={() => this.onVisualClick(this.state.pawnArrX, this.state.pawnArrY)}>Find Path</button></span>
+          <span><button id='visualize' className="ui button" onClick={() => this.onVisualClick(this.state.pawnArrX, this.state.pawnArrY)}>Find path</button></span>
         </div>
 
         <div id='result'>
