@@ -1,6 +1,9 @@
 # How to run the app
 
+```
 npm install
+npm start
+```
 
 # Getting Started with Create React App
 
