@@ -1,4 +1,4 @@
-# How to run the app
+# How to run this app
 
 ```
 npm install
@@ -75,3 +75,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### etc
+
+```
+npm install -g create-react-app
+create-react-app ringle-chess
+npm install
+```
