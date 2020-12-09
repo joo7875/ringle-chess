@@ -33,6 +33,11 @@ class App extends Component {
 
   onDrawPawn = (pawn) => {
 
+    var resultDiv = document.getElementById('result');
+    while (resultDiv.childNodes.length > 1) {
+      resultDiv.removeChild(resultDiv.lastChild);
+    }
+
     this.setState({ pawnArrX: [], pawnArrY: [] });
     
     for (var i = 0; i < pawn; i++) {
@@ -58,11 +63,6 @@ class App extends Component {
   }
 
   onAddPawn = (pawn) => {
-
-    var resultDiv = document.getElementById('result');
-    while (resultDiv.childNodes.length > 1) {
-      resultDiv.removeChild(resultDiv.lastChild);
-    }
 
     var pawnDiv = document.getElementById('pawnDiv');
 
