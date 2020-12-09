@@ -23,6 +23,11 @@ class App extends Component {
       this.setState({ pawnInput: e.target.value, pawnArrX: [], pawnArrY: [] });
       this.onAddPawn(e.target.value);
       this.onDrawBoard(this.state.boardInput);
+
+      var resultDiv = document.getElementById('result');
+      while (resultDiv.childNodes.length > 1) {
+        resultDiv.removeChild(resultDiv.lastChild);
+      }
     }
   }
 
@@ -53,6 +58,11 @@ class App extends Component {
   }
 
   onAddPawn = (pawn) => {
+
+    var resultDiv = document.getElementById('result');
+    while (resultDiv.childNodes.length > 1) {
+      resultDiv.removeChild(resultDiv.lastChild);
+    }
 
     var pawnDiv = document.getElementById('pawnDiv');
 
@@ -144,7 +154,7 @@ class App extends Component {
       for (var n = 0; n < this.state.pawnInput; n++) {
 
           if (arrX.length > 0 && arrY.length > 0) {
-            ctx.fillStyle = "#ffaa00";
+            ctx.fillStyle = "#ffaa00"; //orange
             ctx.fillRect(size * arrY[n], size * arrX[n], size, size);
           }
         
@@ -154,14 +164,21 @@ class App extends Component {
     // draw result
     if (result !== undefined) {
 
-      var j = 0;
+      var y = 0;
 
       var animation = setInterval(() => {
-          ctx.fillStyle = "#ff3300";
-          ctx.fillRect(size * result[j][1], size * result[j][0], size, size);
-          j++;
+          ctx.fillStyle = "#ff3300"; //red
+          // var cr = 'rgb('+
+          //   Math.floor(Math.random()*256)+','+
+          //   Math.floor(Math.random()*256)+','+
+          //   Math.floor(Math.random()*256)+')';
 
-          if (j >= result.length) {
+          // ctx.fillStyle = cr;
+
+          ctx.fillRect(size * result[y][1], size * result[y][0], size, size);
+          y++;
+
+          if (y >= result.length) {
               clearInterval(animation);
           }
       }, 500);
@@ -192,7 +209,7 @@ class App extends Component {
     resultDiv.style.display = 'block';
 
     var count = document.createElement('div');
-    count.innerText = result.length;
+    count.innerText = result.length - this.state.pawnInput;
     resultDiv.appendChild(count);
 
     result.forEach((item) => {
@@ -208,6 +225,9 @@ class App extends Component {
     var start = [];
     var end = [];
     result = [];
+
+    arrX.push(arrX[0]);
+    arrY.push(arrY[0]);
 
     // start.push(arrX[0], arrY[0]); // 노드 2개라고 가정
     // end.push(arrX[1], arrY[1]);
@@ -372,9 +392,9 @@ class App extends Component {
     // console.log(open);
 
     // close.pop(); // remove the last value of close array
-    console.log(close);
+    // console.log(close);
     result.push(...close);
-    console.log(result);
+    // console.log(result);
 
     this.onDrawBoard(this.state.boardInput, this.state.pawnArrX, this.state.pawnArrY, result);
     this.onShowResult(result);
@@ -383,8 +403,8 @@ class App extends Component {
 
   render() {
 
-    var boardInput = this.state.boardInput;
-    var pawnInput = this.state.pawnInput;
+    // var boardInput = this.state.boardInput;
+    // var pawnInput = this.state.pawnInput;
 
     return (
       <div className='grid'>
