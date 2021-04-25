@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/ringle-chess/static/css/main.57b7c036.chunk.css",
+    "main.js": "/ringle-chess/static/js/main.5fc8ad86.chunk.js",
+    "main.js.map": "/ringle-chess/static/js/main.5fc8ad86.chunk.js.map",
+    "runtime-main.js": "/ringle-chess/static/js/runtime-main.35d968fe.js",
+    "runtime-main.js.map": "/ringle-chess/static/js/runtime-main.35d968fe.js.map",
+    "static/js/2.2f2f1882.chunk.js": "/ringle-chess/static/js/2.2f2f1882.chunk.js",
+    "static/js/2.2f2f1882.chunk.js.map": "/ringle-chess/static/js/2.2f2f1882.chunk.js.map",
+    "static/js/3.671d1ac1.chunk.js": "/ringle-chess/static/js/3.671d1ac1.chunk.js",
+    "static/js/3.671d1ac1.chunk.js.map": "/ringle-chess/static/js/3.671d1ac1.chunk.js.map",
+    "index.html": "/ringle-chess/index.html",
+    "static/css/main.57b7c036.chunk.css.map": "/ringle-chess/static/css/main.57b7c036.chunk.css.map",
+    "static/js/2.2f2f1882.chunk.js.LICENSE.txt": "/ringle-chess/static/js/2.2f2f1882.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.35d968fe.js",
+    "static/js/2.2f2f1882.chunk.js",
+    "static/css/main.57b7c036.chunk.css",
+    "static/js/main.5fc8ad86.chunk.js"
+  ]
+}
