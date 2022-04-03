@@ -4,6 +4,9 @@
 npm install
 npm start
 ```
+# Demo
+
+https://joo7875.github.io/ringle-chess/
 
 # Getting Started with Create React App
 
